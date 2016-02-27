@@ -5,6 +5,8 @@ var MongoStore = require('connect-mongo')(session);
 var favicon = require('serve-favicon');
 var errorHandler = require('errorhandler');
 var logger = require('morgan');
+var passport = require('passport');
+var jwt = require('jwt-simple');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
@@ -33,6 +35,7 @@ app.set('port', process.env.PORT || 3000);
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 app.use(logger('dev'));
+app.use(passport.initialize());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
