@@ -3,34 +3,46 @@ var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt');
 
 var UserSchema = new Schema({
-  email: {
+    email: {
         type: String,
         unique: true,
         required: true
     },
-  password: {
-        type: String,
-        required: true
+    password: {
+        type: String
+    },
+    //Add random char to end of hash
+    salt: {
+        type: String
+    },
+    password_hash: {
+        type: String
     }
 });
  
 UserSchema.pre('save', function (next) {
     var user = this;
     if (this.isModified('password') || this.isNew) {
-        bcrypt.genSalt(10, function (err, salt) {
-            if (err) {
-                return next(err);
-            }
-            bcrypt.hash(user.password, salt, function (err, hash) {
-                if (err) {
-                    return next(err);
-                }
-                user.password = hash;
-                next();
-            });
-        });
-    } else {
-        return next();
+        var salt = bcrypt.genSaltSync(10);
+        var hashedPassword = bcrypt.hashSync(user.password, salt);
+        user.password = hashedPassword;
+        user.salt = salt;
+        user.password_hash = hashedPassword;
+        next();
+    //     bcrypt.genSalt(10, function (err, salt) {
+    //         if (err) {
+    //             return next(err);
+    //         }
+    //         bcrypt.hash(user.password, salt, function (err, hash) {
+    //             if (err) {
+    //                 return next(err);
+    //             }
+    //             user.password = hash;
+    //             next();
+    //         });
+    //     });
+    // } else {
+    //     return next();
     }
 });
  

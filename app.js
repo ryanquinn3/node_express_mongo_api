@@ -10,6 +10,8 @@ var jwt = require('jwt-simple');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var mongo_express = require('mongo-express/lib/middleware');
+var mongo_express_config = require('./mongo_express_config');
 var dotenv = require('dotenv');
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -26,10 +28,16 @@ mongoose.connection.on('error', function() {
 mongoose.connection.on('open', function(){
   console.log('Connected to MongoDB');
 })
+
 app.set('port', process.env.PORT || 3000);
 // view engine setup
 //app.set('views', path.join(__dirname, 'views'));
 //app.set('view engine', 'jade');
+
+/**
+* Mongo Express GUI
+*/
+app.use('/mongo_express', mongo_express(mongo_express_config))
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
