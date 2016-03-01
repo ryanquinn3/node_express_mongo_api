@@ -1,10 +1,11 @@
-var bcrypt  = require('bcrypt');
-var _   = require('underscore');
-var cryptojs = require('crypto-js');
-var User = require('../models/user');
-var Token = require('../models/token');
-var jwt = require('jsonwebtoken');
-var dotenv = require('dotenv');
+var bcrypt    = require('bcrypt');
+var _         = require('underscore');
+var cryptojs  = require('crypto-js');
+var User      = require('../models/user');
+var Token     = require('../models/token');
+var jwt       = require('jsonwebtoken');
+var dotenv    = require('dotenv');
+var dateFormat = require('dateformat');
 dotenv.load();
 
 // Sign up a user
@@ -21,7 +22,13 @@ exports.signup = function(req, res) {
       if (err) {
         return res.json({success: false, msg: 'Email already exists. Please try again'});
       }
-      res.json({success: true, msg: 'Successful created new user.'});
+      formatedDate = dateFormat(newUser.createdAt, "dddd, mmmm dS, yyyy, h:MM:ss TT");
+      res.json({
+        success: true, 
+        msg: 'Your account has been created.',
+        email: newUser.email,
+        createdAt: formatedDate
+      });
     });
   }
 }
@@ -75,6 +82,16 @@ exports.users = function(req, res, next) {
   }
 };
 
+exports.signout = function(req, res){
+  Token.findOneAndRemove(req.header.token, function (err) {  
+    if (err){
+      res.status(500).send();
+    }
+    res.status(204).send();
+    res.json({success: true, msg: 'You are logged out!'});
+  });
+}
+
 authenticate = function(body){
     return new Promise(function(resolve, reject){
     //Verify that information being sent is a string
@@ -96,11 +113,6 @@ authenticate = function(body){
       reject();
     });
   });
-  };
-
-toPublicJSON = function() {
-  var json = this.toJSON();
-  return _.pick(json,'id', 'email', 'createdAt', 'updatedAt');
 };
 
 generateToken = function(user,type){

@@ -11,7 +11,7 @@ var middleware  = require('../middleware.js');
 
 router.get('/', middleware.requireAuthentication, userController.users);
 router.post('/signup', userController.signup);
-// router.post('/signout', userController.signout);
+router.delete('/signout', middleware.requireAuthentication, userController.signout);
 router.post('/auth', userController.auth);
 
 
