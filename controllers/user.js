@@ -67,7 +67,6 @@ exports.auth = function(req, res) {
 exports.users = function(req, res, next) {
   var token = req.headers.authorization;
   if (token) {
-    //var decoded = jwt.decode(token, process.env.SESSION_SECRET);
     User.findById(req.user._id, function(err, user) {
         if (err) throw err;
  
