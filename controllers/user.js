@@ -11,7 +11,7 @@ dotenv.load();
 // Sign up a user
 exports.signup = function(req, res) {
   if (!req.body.email || !req.body.password) {
-    res.json({success: false, msg: 'Please provide a valid email and password.'});
+    res.json({success: false, msg: 'Please provide a valid email and/or password.'});
   } else {
     var newUser = new User({
       email: req.body.email,
