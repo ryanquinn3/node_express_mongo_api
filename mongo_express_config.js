@@ -2,6 +2,7 @@
 
 var mongo;
 var url = require('url');
+var config = require('./config/database');
 
 if (typeof process.env.MONGODB_PORT === 'string') {
   var mongoConnection = url.parse(process.env.MONGODB_PORT);

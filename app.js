@@ -19,8 +19,11 @@ var users = require('./routes/users');
 var app = express();
 //Load environment variables from .env file, where API keys and passwords are configured.
 dotenv.load({path: '.env'});
+
+var config = require('./config/database');
 //Database setup
-mongoose.connect(process.env.MONGODB || process.env.MONGOLAB_URI);
+mongoose.connect(config.mongoURI[app.settings.env]);
+
 mongoose.connection.on('error', function() {
   console.log('MongoDB Connection Error. Please make sure that MongoDB is running.');
   process.exit(1);

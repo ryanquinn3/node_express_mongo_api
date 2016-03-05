@@ -82,11 +82,10 @@ exports.users = function(req, res, next) {
 };
 
 exports.signout = function(req, res){
-  Token.findOneAndRemove(req.header.token, function (err) {  
+  Token.findOneAndRemove(req.header.token, function (err) { 
     if (err){
       res.status(500).send();
     }
-    res.status(204).send();
     res.json({success: true, msg: 'You are logged out!'});
   });
 }
